@@ -1,0 +1,54 @@
+---
+- hosts: all
+  gather_facts: false
+  remote_user: ubuntu
+  become: true
+
+  pre_tasks:
+  - include_vars: .picocluster.yml
+    runonce: true
+
+  tasks:
+  - name: Add a new user named pico
+    user:
+      name: pico
+      shell: /bin/bash
+      password: "{{ hashed_pass }}"
+
+  - name: Add pico user to the sudoers
+    copy:
+      dest: "/etc/sudoers.d/pico"
+      content: "pico  ALL=(ALL)  NOPASSWD: ALL"
+
+  - name: Deploy SSH Key
+    authorized_key: 
+      user: pico
+      key: "{{ lookup('file', 'pico_id_ecdsa.pub') }}"
+      state: present
+    tags: sshkey
+
+  # - name: Disable Password Authentication
+  #   lineinfile:
+  #     dest: /etc/ssh/sshd_config
+  #     regexp: '^PasswordAuthentication'
+  #     line: "PasswordAuthentication no"
+  #     state: present
+  #     backup: yes
+  #   notify:
+  #     - restart ssh
+
+  - name: Disable Root Login
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: '^PermitRootLogin'
+      line: "PermitRootLogin no"
+      state: present
+      backup: yes
+    notify:
+      - restart ssh
+
+  handlers:
+    - name: restart ssh
+      service:
+        name: sshd
+        state: restarted

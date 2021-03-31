@@ -1,0 +1,11 @@
+sudo sed -i 's/preserve_hostname: false/preserve_hostname: true/g' /etc/cloud/cloud.cfg
+sudo sed -i 's/iface eth0 inet dhcp/iface eth0 inet static/g' /etc/network/interfaces.d/50-cloud-init.cfg
+sudo cat >> /etc/network/interfaces.d/50-cloud-init.cfg <<EOL
+address 10.10.10.239
+gateway 10.10.10.1
+#google dns servers
+domain_name_servers=10.10.10.1, 8.8.8.8, 8.8.4.4
+EOL
+sudo sed -i 's/ubuntu/pico239/g' /etc/hosts
+sudo sed -i 's/ubuntu/pico239/g' /etc/hostname
+sudo hostname pico239

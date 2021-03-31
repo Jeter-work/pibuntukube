@@ -1,0 +1,25 @@
+---
+- name: use --tags=shutdown or --tags=reboot
+  hosts: picocluster:!offline
+  gather_facts: false
+  become: true
+
+  pre_tasks:
+  - include_vars: .picocluster.yml
+    run_once: true
+    tags: ['always']
+
+  tasks:
+    - name: "{{ ansible_user }}"
+      debug:
+        msg: "{{ ansible_user }}"
+      tags: ['never', 'debug']
+
+    - name: shutdown
+      community.general.shutdown:
+      tags: ['never', 'shutdown']
+
+    - name: reboot, wait 5 (total of 10)
+      reboot:
+        reboot_timeout: 300
+      tags: ['never', 'reboot']

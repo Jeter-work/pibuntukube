@@ -1,0 +1,42 @@
+---
+- hosts: picocluster:!offline
+  gather_facts: false
+  become: true
+  
+  pre_tasks:
+  - include_vars: .picocluster.yml
+    run_once: true
+
+  tasks:
+    - name: rename server
+      hostname:
+        name: "{{ hostname }}"
+
+    - name: update cloud-init
+      lineinfile:
+        path: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+        line: 'network:'
+        state: present
+        create: yes
+
+    - name: update cloud-init pt2
+      lineinfile:
+        path: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+        regexp: '^config'
+        line: 'config: disabled'
+        insertafter: 'network:'
+        state: present
+
+    - name: update hosts file
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127.0.1.1'
+        line: "127.0.1.1 {{ hostname }} {{ hostname }}"
+        insertafter: '^127.0.0.1'
+        state: present
+
+    - name: update hosts file
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^{{ inventory_hostname }}'
+        state: absent
