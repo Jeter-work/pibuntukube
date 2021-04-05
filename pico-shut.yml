@@ -5,7 +5,7 @@
   become: true
 
   pre_tasks:
-  - include_vars: .picocluster.yml
+  - include_vars: ~/.ansible/.picocluster.yml
     run_once: true
     tags: ['always']
 
