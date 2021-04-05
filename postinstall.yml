@@ -1,5 +1,5 @@
 ---
-- hosts: picocluster:!offline
+- hosts: all
   gather_facts: false
   become: true
   

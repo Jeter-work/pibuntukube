@@ -6,7 +6,7 @@
 
   pre_tasks:
   - include_vars: .picocluster.yml
-    runonce: true
+    run_once: true
 
   tasks:
   - name: Add a new user named pico
@@ -19,6 +19,7 @@
     copy:
       dest: "/etc/sudoers.d/pico"
       content: "pico  ALL=(ALL)  NOPASSWD: ALL"
+      validate: /usr/sbin/visudo -cf %s
 
   - name: Deploy SSH Key
     authorized_key: 
