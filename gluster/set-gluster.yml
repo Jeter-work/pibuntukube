@@ -23,4 +23,10 @@
         enabled: yes
         state: started
 
-#- hosts: picocluster
+# filesystem for SD cards
+    - name: put xfs on the 3rd, spare, partitiion
+      community.general.filesystem:
+        dev: '/dev/mmcblk0p3'
+        fstype: xfs
+        state: present
+
