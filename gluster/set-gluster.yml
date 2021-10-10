@@ -14,6 +14,7 @@
       community.general.modprobe:
         name: fuse
         state: present
+      tags: ['fuse']
 
 # apt-get install -y xfsprogs glusterfs-server
     - name: install prerequisites
@@ -21,6 +22,7 @@
         pkg:
           - xfsprogs 
           - glusterfs-server
+      tags: ['prereqs']
 
 # systemctl start glusterd
     - name: start gluster daemon
@@ -28,6 +30,7 @@
         name: glusterd
         enabled: yes
         state: started
+      tags: ['glusterd']
 
 # filesystem for SD cards
     - name: put xfs on the 3rd, spare, partitiion
@@ -35,4 +38,20 @@
         dev: '/dev/mmcblk0p3'
         fstype: xfs
         state: present
+      tags: ['mkfs']
 
+# create mountpoint
+    - name: mkdir /data/glusterfs/myvol1/brick1
+      ansible.builtin.file:
+        path: /data/glusterfs/myvol1/brick1
+        state: directory
+      tags: ['mkdir']
+
+# mount SD filesystem 
+    - name: mount /dev/mmcblk0p3 on /data/glusterfs/myvol1/brick1
+      ansible.posix.mount:
+        path: '/data/glusterfs/myvol1/brick1'
+        src: '/dev/mmcblk0p3'
+        fstype: xfs
+        state: present
+      tags: ['mount']
