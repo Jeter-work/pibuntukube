@@ -1,0 +1,12 @@
+---
+- name: setup gluster volume
+  hosts: pico230
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: gluster peer probe
+      ansible.builtin.shell: gluster peer probe PEER_HOSTNAME
+    
+    - name: gluster volume create
+      ansible.builtin.shell: gluster volume create myvol1 replica 4 pico231:/data/glusterfs/myvol1/brick1/brick pico232:/data/glusterfs/myvol1/brick1/brick pico233:/data/glusterfs/myvol1/brick1/brick pico234:/data/glusterfs/myvol1/brick1/brick pico235:/data/glusterfs/myvol1/brick1/brick pico236:/data/glusterfs/myvol1/brick1/brick pico237:/data/glusterfs/myvol1/brick1/brick pico238:/data/glusterfs/myvol1/brick1/brick pico239:/data/glusterfs/myvol1/brick1/brick

@@ -1,12 +1,15 @@
 ---
-- hosts: picocluster:!offline
+- name: install, configure, and implement gluster
+  hosts: picocluster:!offline
   gather_facts: false
   become: true
 
   pre_tasks:
-  - include_vars: ~/.ansible/.picocluster.yml
-    run_once: true
-    tags: ['always']
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      tags: ['always']
 
   tasks:
 # modprobe fuse
@@ -18,7 +21,7 @@
 
 # apt-get install -y xfsprogs glusterfs-server
     - name: install prerequisites
-      apt:
+      ansible.builtin.apt:
         pkg:
           - xfsprogs 
           - glusterfs-server
