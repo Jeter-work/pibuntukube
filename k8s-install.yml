@@ -1,0 +1,13 @@
+- hosts: picocluster
+  roles:
+    - role: istvano.microk8s
+      vars:
+        microk8s_version: 'latest/stable'
+        microk8s_enable_HA: True
+        microk8s_group_HA: "picocluster"  # hostgroup whose members will form high-availability cluster
+        microk8s_ip_regex_HA: "(192.168.86.[230-239])"  # regex to select IP address for joining nodes in HA setup
+        microk8s_plugins:
+          istio: True
+          ingress: True
+          prometheus: True
+          helm3: True

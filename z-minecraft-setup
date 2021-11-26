@@ -1,0 +1,4 @@
+helm repo add itzg https://itzg.github.io/minecraft-server-charts/
+helm search repo itzg
+helm repo update
+helm install minecraaft --set minecraftServer.eula=true itzg/minecraft

@@ -15,4 +15,4 @@ ls -l /media/pico/writable/etc/cloud/cloud.cfg.d/
 # copy user-data file for hostname
 sudo cp /home/pico/pibuntu/local/custom/system-boot/user-data /media/pico/system-boot/
 echo "should see user-data"
-ls -l /media/pico/system-boot/user-dataD
+ls -l /media/pico/system-boot/user-data

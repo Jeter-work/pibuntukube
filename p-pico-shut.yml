@@ -5,9 +5,11 @@
   become: true
 
   pre_tasks:
-  - include_vars: ~/.ansible/.picocluster.yml
-    run_once: true
-    tags: ['always']
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      tags: ['always']
 
   tasks:
     - name: "{{ ansible_user }}"

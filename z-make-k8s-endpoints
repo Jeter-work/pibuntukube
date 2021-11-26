@@ -1,0 +1,46 @@
+#!/bin/bash
+cat <<EOF | kubectl apply -f -                                                    
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: glusterfs-cluster
+subsets:
+- addresses:
+  - ip: 192.168.86.230
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.231
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.232
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.233
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.234
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.235
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.236
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.237
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.238
+  ports:
+  - port: 49152
+- addresses:
+  - ip: 192.168.86.239
+EOF

@@ -1,11 +1,15 @@
 ---
-- hosts: all
+- name: post install finishing touches
+  hosts: all
   gather_facts: false
   become: true
-  
+
   pre_tasks:
-  - include_vars: ~/.ansible/.picocluster.yml
-    run_once: true
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      tags: ['always']
 
   tasks:
     - name: rename server

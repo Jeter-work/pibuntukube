@@ -1,0 +1,28 @@
+---
+- name: apply upgrades using apt
+  hosts: picocluster:!offline
+  gather_facts: no
+  become: yes
+
+  pre_tasks:
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      tags: ['always']
+
+  tasks:
+    - name: upgrade
+      ansible.builtin.apt:
+        autoclean: yes
+        autoremove: yes
+        update_cache: yes
+        cache_valid_time: 3600
+        upgrade: dist
+      notify: restart os
+      tags: ['upgrade']
+
+  handlers: 
+    - name: restart os
+      ansible.builtin.reboot:
+        reboot_timeout: 300

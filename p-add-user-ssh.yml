@@ -5,8 +5,11 @@
   become: true
 
   pre_tasks:
-  - include_vars: ~/.ansible/.picocluster.yml
-    run_once: true
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      tags: ['always']
 
   tasks:
   - name: Add a new user named pico
@@ -22,7 +25,7 @@
       validate: /usr/sbin/visudo -cf %s
 
   - name: Deploy SSH Key
-    authorized_key: 
+    authorized_key:
       user: pico
       key: "{{ lookup('file', 'pico_id_ecdsa.pub') }}"
       state: present

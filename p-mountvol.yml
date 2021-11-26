@@ -1,0 +1,35 @@
+---
+- name: mount gluster volumes
+  hosts: picocluster:!offline
+  gather_facts: no
+  become: yes
+
+  vars:
+    mountpoint: "/mnt/{{ glustervol }}"
+    glustervol: 'myvol1'
+
+  pre_tasks:
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      tags: ['always']
+
+  tasks:
+    - name: mountpoint exists
+      ansible.builtin.file:
+        path: "{{ mountpoint }}"
+        state: directory
+
+    - name: Mounting myvol1
+      ansible.posix.mount:
+        path: "{{ mountpoint }}"
+        src: "{{ inventory_hostname }}:/{{ glustervol }}"
+        fstype: glusterfs
+        opts: "defaults,_netdev"
+        state: mounted
+
+    - name: drop a testfile
+      ansible.builtin.file:
+        path: "{{mountpoint}}/.{{inventory_hostname}}"
+        state: touch

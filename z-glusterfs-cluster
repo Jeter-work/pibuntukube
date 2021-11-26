@@ -1,0 +1,10 @@
+#!/bin/bash
+cat <<EOF | kubectl apply -f -                                                    
+apiVersion: v1
+kind: Service
+metadata:
+  name: glusterfs-cluster
+spec:
+  ports:
+  - port: 49152
+EOF
