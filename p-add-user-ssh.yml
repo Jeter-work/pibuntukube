@@ -1,28 +1,29 @@
 ---
 - hosts: all
   gather_facts: false
-  remote_user: ubuntu
   become: true
 
   pre_tasks:
-    - name: load vault
-      include_vars:
-        file: ~/.ansible/.picocluster.yml
-      run_once: true
-      tags: ['always']
+  - name: load vault
+    include_vars:
+      file: ~/.ansible/.picocluster.yml
+    run_once: true
+    no_log: true
+    tags: ['always']
 
   tasks:
   - name: Add a new user named pico
     user:
       name: pico
       shell: /bin/bash
-      password: "{{ hashed_pass }}"
+      password: "{{ pico_hashed_pass }}"
 
   - name: Add pico user to the sudoers
     copy:
       dest: "/etc/sudoers.d/pico"
       content: "pico  ALL=(ALL)  NOPASSWD: ALL"
       validate: /usr/sbin/visudo -cf %s
+    notify: remove builtin
 
   - name: Deploy SSH Key
     authorized_key:
@@ -30,6 +31,11 @@
       key: "{{ lookup('file', 'pico_id_ecdsa.pub') }}"
       state: present
     tags: sshkey
+
+  - name: update builltin password
+    user:
+      name: "{{ builtin_user }}"
+      password: "{{ builtin_hashed_password }}"
 
   # - name: Disable Password Authentication
   #   lineinfile:
@@ -52,7 +58,7 @@
       - restart ssh
 
   handlers:
-    - name: restart ssh
-      service:
-        name: sshd
-        state: restarted
+  - name: restart ssh
+    service:
+      name: sshd
+      state: restarted

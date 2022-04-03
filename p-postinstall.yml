@@ -22,6 +22,7 @@
         line: 'network:'
         state: present
         create: yes
+      tags: ['never','ubuntu']
 
     - name: update cloud-init pt2
       lineinfile:
@@ -30,6 +31,7 @@
         line: 'config: disabled'
         insertafter: 'network:'
         state: present
+      tags: ['never','ubuntu']
 
     - name: update hosts file
       lineinfile:
