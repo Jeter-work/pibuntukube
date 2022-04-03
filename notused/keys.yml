@@ -1,7 +1,7 @@
   #!/usr/bin/env ansible-playbook
 ---
 - name: accept ssh fingerprint automatically for the first time
-  hosts: picocluster:!offline
+  hosts: all:!offline
   connection: local
   gather_facts: false
   become: false

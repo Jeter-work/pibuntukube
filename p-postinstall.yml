@@ -1,6 +1,6 @@
 ---
 - name: post install finishing touches
-  hosts: all
+  hosts: all:!offline
   gather_facts: false
   become: true
 

@@ -1,6 +1,6 @@
 ---
 - name: install, configure, and implement gluster
-  hosts: picocluster:!offline
+  hosts: all:!offline
   gather_facts: false
   become: true
 

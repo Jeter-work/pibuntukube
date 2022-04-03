@@ -1,6 +1,6 @@
 ---
 - name: use --tags=shutdown or --tags=reboot
-  hosts: picocluster:!offline
+  hosts: all:!offline
   gather_facts: false
   become: true
 
@@ -9,6 +9,7 @@
       include_vars:
         file: ~/.ansible/.picocluster.yml
       run_once: true
+      no_log: true
       tags: ['always']
 
   tasks:

@@ -1,0 +1,62 @@
+---
+- name: post install fix partition
+  hosts: all:!offline
+  gather_facts: false
+  become: true
+
+  pre_tasks:
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      no_log: true
+      tags: ['always']
+
+  vars:
+    blk_device: '/dev/mmcblk0'
+
+  tasks:
+    # specific to Rocky and 128GB card.  Change part end as desired, and device as needed.
+
+    - name: Read device information (always use unit when probing)
+      community.general.parted:
+        device: "{{ blk_device }}"
+        unit: MiB
+      register: blockdev_info
+      tags: ['debug']
+
+    - name: set part_num
+      set_fact:
+        part_num: "{{ blockdev_info.partitions | length | int }}"
+      tags: ['debug']
+
+    - name: set part_index
+      set_fact:
+        part_index: "{{ part_num | int - 1 }}"
+      tags: ['debug']
+
+    - name: set part_fstype
+      set_fact:
+        part_fstype: "{{ blockdev_info.partitions[part_index|int].fstype }}"
+      tags: ['debug']
+
+    - name: show part_num
+      debug:
+        msg: "{{ part_num }}, {{ part_index }}, {{ part_fstype }}"
+      tags: ['never','debug']
+
+    - name: Extend an existing partition to fill some available space
+      community.general.parted:
+        device: "{{ blk_device }}"
+        number: "{{ part_num }}"
+        part_end: "25%"
+        resize: true
+        state: present
+      notify: grow filesystem
+
+  handlers:
+    - name: grow filesystem
+      community.general.filesystem:
+        dev: "{{ blk_device }}p{{ part_num }}"
+        resizefs: yes
+        fstype: "{{ part_fstype }}"

@@ -1,19 +1,20 @@
 ---
 - name: mount gluster volumes
-  hosts: picocluster:!offline
-  gather_facts: no
-  become: yes
-
-  vars:
-    mountpoint: "/mnt/{{ glustervol }}"
-    glustervol: 'myvol1'
+  hosts: all:!offline
+  gather_facts: false
+  become: true
 
   pre_tasks:
     - name: load vault
       include_vars:
         file: ~/.ansible/.picocluster.yml
       run_once: true
+      no_log: true
       tags: ['always']
+
+  vars:
+    mountpoint: "/mnt/{{ glustervol }}"
+    glustervol: 'myvol1'
 
   tasks:
     - name: mountpoint exists
@@ -31,5 +32,5 @@
 
     - name: drop a testfile
       ansible.builtin.file:
-        path: "{{mountpoint}}/.{{inventory_hostname}}"
+        path: "{{ mountpoint }}/.{{ inventory_hostname }}"
         state: touch

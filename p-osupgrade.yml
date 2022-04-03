@@ -1,6 +1,6 @@
 ---
 - name: apply upgrades using apt
-  hosts: picocluster:!offline
+  hosts: all:!offline
   gather_facts: no
   become: yes
 
