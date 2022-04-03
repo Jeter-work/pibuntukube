@@ -9,6 +9,7 @@
       include_vars:
         file: ~/.ansible/.picocluster.yml
       run_once: true
+      no_log: true
       tags: ['always']
 
   tasks:
