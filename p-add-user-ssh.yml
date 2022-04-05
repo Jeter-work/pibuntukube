@@ -9,7 +9,7 @@
       include_vars:
         file: ~/.ansible/.picocluster.yml
       run_once: true
-      no_log: true
+#      no_log: true
       tags: ['always']
 
   tasks:
@@ -20,8 +20,11 @@
       line: "PermitRootLogin no"
       state: present
       backup: yes
-    notify:
-      - restart ssh
+
+  - name: restart ssh
+    service:
+      name: sshd
+      state: restarted
 
   - name: Add a new user named pico
     user:
@@ -57,10 +60,14 @@
   #   notify:
   #     - restart ssh
 
-  handlers:
-  - name: restart ssh
+# these are utility tasks
+  - name: restart ssh only
     service:
       name: sshd
       state: restarted
-    vars:
-      ansible_become_password: "{{ bulitin_pass }}"
+    tags: ['never','restartssh']
+
+  - name: "unlock {{ builtin_user }}"
+    user:
+      name: "{{ builtin_user }}"
+    tags: ['never','unlock']

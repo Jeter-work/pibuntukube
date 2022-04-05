@@ -1,6 +1,6 @@
 ---
 - name: post install finishing touches
-  hosts: all:!offline
+  hosts: picocluster:!offline
   gather_facts: false
   become: true
 
