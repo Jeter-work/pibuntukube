@@ -1,0 +1,6 @@
+---
+# handlers file for useiptables
+#
+- name: Reboot
+  ansible.builtin.reboot:
+    reboot_timeout: 3000

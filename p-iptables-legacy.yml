@@ -1,0 +1,16 @@
+---
+- name: post install fix partition
+  hosts: all:!offline
+  gather_facts: false
+  become: true
+
+  pre_tasks:
+    - name: load vault
+      include_vars:
+        file: ~/.ansible/.picocluster.yml
+      run_once: true
+      no_log: true
+      tags: ['always']
+
+  roles:
+    - useiptables 
